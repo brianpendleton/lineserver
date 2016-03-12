@@ -1,5 +1,13 @@
 # lineserver
 
+## Requirements
+This server requires SBT and MongoDB.  I didn't put the installation commands into my scripts because I don't know what platform it will run on.  Please use the following links to get them installed:
+
+http://www.scala-sbt.org/release/docs/Installing-sbt-on-Linux.html
+
+https://docs.mongodb.org/manual/installation/
+
+Also, once installed, MongoDB needs to be running on the machine before launching `run.sh`
 
 #####How does your system work? (if not addressed in comments in source)
 We start by preprocessing the given text file, inserting the rows into MongoDB.  The format of each MongoDB document is: `{lineNumber: 2, value: "line of the file"}`.  This allows us query quickly by row number using a method like: `db.collection.find({lineNumber: requestedLineNumber})`.  Once the file is processed, we spin up the web server which has a single rest service.  I chose not to feed the file directly from disk
@@ -39,6 +47,8 @@ I use MongoDB over trying to server the file myself.  I wanted a tool that would
 2 hours brushing up on Scala syntax
 
 2 hours coding
+
+If I had unlimited time, I would get ScalaMock working with the Mongo hooks so I could test out the API.  I would have continued down the ReactiveMongo path to get a full non-blocking IO solution in the actors. I would have coded this in Java, Python, and Ruby to play with multiple frameworks so I can get some experience with them.
 
 #####If you were to critique your code, what would you have to say about it?
 I don't have tests.  I am not very fast at Scala as the last time I used it was 18 months ago. I would never release this into production without wrapping the services in tests. I was spending too much time messing with ScalaMock to mock out the MongoDB calls.  I easily could have written a Specification if I was just serving the raw files off disk, but the Mongo hooks made it difficult as the web server relies on mongo running.
