@@ -6,7 +6,7 @@ We start by preprocessing the given text file, inserting the rows into MongoDB. 
 
 
 #####How will your system perform with a 1 GB file? a 10 GB file? a 100 GB file?
-The mongo preprocessing will scale to the filesize as long as you have the disk space.  The nice thing about MongoDB is that we can use some replication and sharding to handle different use cases as the collections get larger.
+The mongo preprocessing will scale to the filesize as long as you have the disk space.  The nice thing about MongoDB is that we can use some replication and sharding to handle different use cases as the collections get larger.  As the collection grows in size, I think we would also want to index it by rownumber which would help query performance.
 
 
 #####How will your system perform with 100 users? 10000 users? 1000000 users?
@@ -29,7 +29,7 @@ https://www.khalidalnajjar.com/insert-200-million-rows-into-mongodb-in-minutes/
 
 
 #####What third-party libraries or other tools does the system use? How did you choose each library or framework you used?
-
+I use MongoDB over trying to server the file myself.  I wanted a tool that would be queryable by line number, and also offer something which could scale (if needed).  I chose the Spray framework for the http server because it was lightweight and I really liked the DSL they built to express the actor workflow for handling requests. Combined with the scala pattern matching, it is simple to understand what the actors do and how they respond with status codes.
 
 #####How long did you spend on this exercise? If you had unlimited more time to spend on this, how would you spend it and how would you prioritize each item?
 1 hour designing what I wanted to use (lightweight http, mongodb for persistence)
@@ -41,4 +41,9 @@ https://www.khalidalnajjar.com/insert-200-million-rows-into-mongodb-in-minutes/
 2 hours coding
 
 #####If you were to critique your code, what would you have to say about it?
-I don't have tests for the scala pieces yet.  I was playing with ScalaMock to try and mock out the MongoDB interface, but I ended up spending too much time and had to call it quits.
+I don't have tests.  I am not very fast at Scala as the last time I used it was 18 months ago. I would never release this into production without wrapping the services in tests. I was spending too much time messing with ScalaMock to mock out the MongoDB calls.  I easily could have written a Specification if I was just serving the raw files off disk, but the Mongo hooks made it difficult as the web server relies on mongo running.
+
+The web server relies on MongoDB being installed and running on port 27017 (default). I didn't want to try to install MongoDB in the build.sh file because I don't know what platform it will run on.  So the code requires the user to do something like the following:  https://docs.mongodb.org/manual/tutorial/install-mongodb-on-linux/  Only a few steps, but I didn't want to put it in my script.
+
+The run.sh will use a linux command to take your file and pipe it as a CSV into mongoimport.  This should only be executed once, so if you kill the server and want to rerun it, please comment our the line which bulk imports into MongoDB.  If you don't, it will reinsert the file again.
+
