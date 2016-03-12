@@ -34,8 +34,11 @@ https://www.khalidalnajjar.com/insert-200-million-rows-into-mongodb-in-minutes/
 #####How long did you spend on this exercise? If you had unlimited more time to spend on this, how would you spend it and how would you prioritize each item?
 1 hour designing what I wanted to use (lightweight http, mongodb for persistence)
 
-6 hours researching what technologies to use
+6+ hours researching what technologies to use
 
-2 hours brushing up on Scala syntax (rusty)
+2 hours brushing up on Scala syntax
+
+2 hours coding
 
 #####If you were to critique your code, what would you have to say about it?
+I don't have tests for the scala pieces yet.  I was playing with ScalaMock to try and mock out the MongoDB interface, but I ended up spending too much time and had to call it quits.
